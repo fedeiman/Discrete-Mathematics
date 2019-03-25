@@ -21,12 +21,12 @@ int main(){
 		g->vertices[1][i] = g->vertices[0][j];
 		j++;
 	}
-	/*for(int i = 0; i<2;i++){
+	for(int i = 0; i<2;i++){
 		for(u32 j = 0;j<(2*g->m);j++){
 			printf("%u",g->vertices[i][j]);
 		}
 		printf("\n");
-	}*/
+	}
 	for(int i = 0;i<2;i++){									//Recorro el arreglo de punteros principales
 		free(g->vertices[i]);								//y los libero
 	}												

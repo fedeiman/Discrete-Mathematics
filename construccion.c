@@ -7,8 +7,9 @@ int main(){
 	printf("numero de aristas:"); 			  				//Pido y 
 	scanf("%d",&g->m);           			  				//guardo n° de aristas
 	g->vertices = malloc(2*sizeof(u32*));     				//g->vertices = array de 2 punteros de u32
-	for(int i = 0; i < 2 ; i++)								//Para cada puntero 
+	for(int i = 0; i < 2 ; i++){							//Para cada puntero 
         g->vertices[i] = malloc((2*g->m)*sizeof(u32));		//le asigno un array de 2*g->m de u32
+	}														
 	for(int i = 0;i<(2*g->m);i++){							//Para cada columna de la matriz 
 	printf("conexiones:");									//completo las aristas
 	scanf("%i",&g->vertices[0][i]);							//y las guardo en sus correspondientes lugares

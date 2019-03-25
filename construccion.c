@@ -20,9 +20,9 @@ int main(){
 		}
 		printf("\n");
 	}*/
-	for(int i = 0;i<2;i++){									    //Recorro el arreglo de punteros principales
-		free(g->vertices[i]);									 	//y los libero
+	for(int i = 0;i<2;i++){									//Recorro el arreglo de punteros principales
+		free(g->vertices[i]);								//y los libero
 	}												
-	free(g->vertices);											//Libero el puntero al arreglo de punteros 
-	free(g);													//Libero la estructura de GrafoSt
+	free(g->vertices);										//Libero el puntero al arreglo de punteros 
+	free(g);												//Libero la estructura de GrafoSt
 }

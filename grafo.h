@@ -1,6 +1,9 @@
-#include <Rii.h>
+#ifndef _GRAFO
+#define _GRAFO
 
-typedef GrafoSt *Grafo; 
+#include "Rii.h"
+
+typedef struct GrafoSt *Grafo; 
 
 //Funciones de Construccion/Destruccion/Copia del grafo
 
@@ -51,3 +54,5 @@ char RMBCrevierte(Grafo G);
 char RMBCchicogrande(Grafo G);
 
 char SwitchColores(Grafo G,u32 i,u32 j);
+
+#endif

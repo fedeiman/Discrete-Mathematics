@@ -1,3 +1,6 @@
+#ifndef _RII
+#define _RII
+
 /* 
 Integrante:
 Federico Matías Imán
@@ -10,4 +13,6 @@ typedef unsigned int u32;
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <grafo.h>
+#include "grafo.h"
+
+#endif

@@ -1,7 +1,7 @@
 #include  "grafo.c"
 
-int cmp(const void* a, const void* b) {
-    u32 *ap = *(u32**)a, *bp = *(u32**)b;
+int cmp(const void* a, const void* b) {						//Funcion para ordenar los vertices
+    u32 *ap = *(u32**)a, *bp = *(u32**)b;					//usada en qsort
     u32 fsta = *ap, fstb = *bp;
     u32 snda = *(++ap), sndb = *(++bp);
     if(fsta == fstb) return snda - sndb;
@@ -28,7 +28,7 @@ int main(){
 		g->vertices[i][1] = g->vertices[j][0];
 		j++;
 	}
-	qsort(g->vertices, 2*(g->m), 8, cmp);
+	qsort(g->vertices, 2*(g->m), 8, cmp);					//Ordeno los vertices de menor a mayor
 	for(u32 i = 0; i< 2*g->m; i++){
 		for(int j = 0;j<2;j++){
 			printf("%u ", g->vertices[i][j]);

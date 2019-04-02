@@ -24,7 +24,7 @@ int main(){
 	
 	g->vertices = (u32**)malloc((2*(g->m))*sizeof(u32*));   //g->vertices = array de 2*(g->m) punteros de u32
 	
-	for(u32 i = 0; i < 2*(g->m) ; i++){						//Para cada puntero 
+	for(u32 i = 0; i < 2*(g->m); i++){						//Para cada puntero 
         g->vertices[i] = (u32*)malloc(2*sizeof(u32));		//le asigno un array de 2 de u32
 	}
 
@@ -35,7 +35,7 @@ int main(){
 	}
 	u32 j = 0;
 															//Declro un variable para iterar en filas
-	for(u32 i = g->m; i<(2*g->m); i++){				    	//For para recorrer desde g->m hasta 2*(g->m)
+	for(u32 i = g->m; i < (2*g->m); i++){				    	//For para recorrer desde g->m hasta 2*(g->m)
 		g->vertices[i][0] = g->vertices[j][1];				//y completar con sus lugares pero invertidos
 		g->vertices[i][1] = g->vertices[j][0];
 		j++;
@@ -71,31 +71,40 @@ int main(){
 			v[i].ind_de_final_vecinos = aux[i];
 		}
 	}
+	g->orden = (u32*)malloc(((g->n))*sizeof(u32*));			//Inicializo el arreglo con el orden
+	
+	for(u32 i = 0; i < g->n; i++){
+		g->orden[i] = v[i].nombre_del_vertice;
+	}
 
 	for(u32 i = 0; i < g->n; i++){
 		printf("El valor de incio de los vecinos de %u es %u\n" ,v[i].nombre_del_vertice,v[i].ind_de_inicio_vecinos);
 		printf("El valor de final de los vecinos de %u es %u\n" ,v[i].nombre_del_vertice,v[i].ind_de_final_vecinos);
 	}
 
-	for(u32 i = 0;i<g->n;i++)
+	for(u32 i = 0; i < g->n; i++){
 	printf("%u ",aux[i]);
+	}
+
 	printf("\n");
 	
-	for(u32 i = 0; i<g->n; i++){
+	for(u32 i = 0; i < g->n; i++){
 		printf("%u ",v[i].nombre_del_vertice);
 	}
+
 	printf("\n");
 
-	for(u32 i = 0; i< 2*g->m; i++){
-		for(int j = 0;j<2;j++){
+	for(u32 i = 0; i < 2*g->m; i++){
+		for(int j = 0; j < 2; j++){
 			printf("%u ", g->vertices[i][j]);
 		}
 		printf("\n");
 	}
 
-	for(u32 i = 0;i<(2*g->m);i++){							//Recorro el arreglo de punteros principales
+	for(u32 i = 0; i < (2*g->m); i++){							//Recorro el arreglo de punteros principales
 		free(g->vertices[i]);								//y los libero
-	}												
+	}		
+	free(g->orden);										
 	free(g->vertices);										//Libero el puntero al arreglo de punteros 
 	free(g);												//Libero la estructura de GrafoSt
 	free(v);

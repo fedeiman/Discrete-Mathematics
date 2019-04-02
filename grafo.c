@@ -1,4 +1,4 @@
-#include "grafo.h"
+#include "Rii.h"
 
 struct GrafoSt {
 	u32 n; //numero de vertices

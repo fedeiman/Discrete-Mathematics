@@ -34,28 +34,152 @@ u32 busqueda_binaria(Vecino *v, u32 dato, u32 array_lenght){
 	return(mitad);											//a buscar no este en v[n]->nombre_del_vetice.
 }															//Cosa que no puede pasar.
 
-int main(){
+  char* linea(char* line){									//Funcion para obtener la primera una linea mediante stdin.
+	//if(line){
+	//	free(line);
+	//}
+    line = (char*)malloc(2*sizeof(char));					//Aloco espacio para la linea.
+    int i = 0; 
+  int tam = 1;
+    char c = fgetc(stdin);									//Tomo el primer caracter  gracias a fgetc y
+  line[i] = c;												//lo guardo.
+    while(line[i] != EOF && line[i] != '\n' && line[i] != '\r') {
+        i++;												//Mientras no sea el final del archivo ni se encuentre con
+    	c = fgetc(stdin);										// \n, \r voy guardando cada caracter de la linea.
+   		line[i] = c;
+        if(i == tam) {
+            line = (char*)realloc(line, (tam = tam*2)*sizeof(char));	//Realoco espacio para la linea.
+        }
+    }
+	line[i] = '\0';										//Agrego el caracter nulo de ASCII para saber donde termina
+	i++;													//una linea.
+	 return (char*)realloc(line, i * sizeof(char));		//Devuelvo el tamaño real de la linea.
+  }
+
+int main (){
+	
 	Grafo g = (Grafo)malloc(sizeof(struct GrafoSt)); 		//Declaro variable de tipo Grafo.
-	
-	printf("numero de vertices:"); 			  				//Pido y
-	
-	if(scanf("%u",&g->n) < 0) return 1;			  			//guardo n° de vertices.
-	
-	printf("numero de aristas:"); 			  				//Pido y 
-	
-	if(scanf("%u",&g->m) < 0) return 1;           			//guardo n° de aristas.
-	
+	char *line;
+	while(1){
+		line = linea(line);
+		if (line[0] == 'c'){								//Mientras el primer caracter de la linea sea 'c' 
+			free(line);										//libero la linea y miro la siguiente.
+		}
+		else{
+			break;
+		}
+	}
+	if(memcmp(line,"p edge ",7)){								//memcmp compara 2 strings, si son iguales retorna 0.
+		free(line);
+		printf("Formanto erroneo, falta p edge\n");
+		free(g);
+		//return NULL;
+	}
+
+	u32 i = 7;
+	g->n = 0;
+	g->m = 0;
+	if((line[i] >= '0') && (line[i] <= '9')){
+		while ((line[i] >= '0') && (line[i] <= '9')){
+    		g->n = (g->n * 10) + ((line[i]) - '0');
+			i++;
+  		}
+	}
+	else{
+		printf("Formato erroneo,más de un espacio luego de p edge\n");
+		free(g);
+		//return NULL;
+	}
+	if(line[i] == ' '){
+		while(line[i] == ' ') {
+    		if(line[i] == '\0') {
+        		printf("Error en la linea p edge\n");
+				free(g);
+		//		return NULL;
+        	} 
+			else{
+				i++;
+			} 
+    	}
+	}
+	else{
+		printf("Formato erroneo,caracter desconocido entre n y m\n");
+		free(g);
+		//return NULL;
+	}
+
+	while ((line[i] >= '0') && (line[i] <= '9')){
+    	g->m = (g->m * 10) + ((line[i]) - '0');
+		i++;
+  	}
+
 	g->vertices = (u32**)malloc((2*(g->m))*sizeof(u32*));   //g->vertices = array de 2*(g->m) punteros de u32.
-	
 	for(u32 i = 0; i < 2*(g->m); i++){						//Para cada puntero 
         g->vertices[i] = (u32*)malloc(2*sizeof(u32));		//le asigno un array de 2 de u32.
 	}
 
-	for(u32 i = 0; i < g->m; i++){ 							//Para cada fila de la matriz 
-		printf("conexiones:");								//completo las aristas
-		if (scanf("%u", &g->vertices[i][0]) < 0) return 1 ;	//y las guardo en sus correspondientes lugares.
-		if (scanf("%u", &g->vertices[i][1]) < 0) return 1;
+	u32 n = 0;
+	for(u32 i = 0; i < g->m; i++){
+		line = linea(line);
+		if(memcmp(line,"e ",2)){								//memcmp compara 2 strings, si son iguales retorna 0.
+			free(line);
+			printf("Error en lado %u\n",i+1);
+			for(u32 i = 0; i < (2*g->m); i++){					
+				free(g->vertices[i]);								
+			}
+			free(g->vertices);
+			free(g);
+			//return NULL;
+		}
+		u32 j = 2;
+		if((line[j] >= '0') && (line[j] <= '9')){
+			while ((line[j] >= '0') && (line[j] <= '9')){
+    			g->vertices[n][0] = (g->vertices[n][0] * 10) + ((line[j]) - '0');
+				j++;
+  			}
+		}
+		else{
+			printf("Formato erroneo,más de un espacio luego de e en la linea %i\n", i+1);
+			for(u32 i = 0; i < (2*g->m); i++){					
+				free(g->vertices[i]);								
+			}
+			free(g->vertices);
+			free(g);
+			//return NULL;
+		}
+		if(line[j] == ' '){
+			while(line[j] == ' ') {
+    			if(line[j] == '\0') {
+        			printf("Error en la linea %u\n",i+1);
+					for(u32 i = 0; i < (2*g->m); i++){					
+						free(g->vertices[i]);								
+					}
+					free(g->vertices);
+					free(g);				
+					//return NULL;
+        		} 
+				else{
+					j++;
+				} 
+    		}
+		}
+		else{
+			printf("Formato erroneo,caracter desconocido en linea %u\n",i+1);
+			for(u32 i = 0; i < (2*g->m); i++){					
+				free(g->vertices[i]);								
+			}
+			free(g->vertices);
+			free(g);			
+			//return NULL;
+	}	
+		while ((line[j] >= '0') && (line[j] <= '9')){
+    		g->vertices[n][1] = (g->vertices[n][1] * 10) + ((line[j]) - '0');
+			j++;
+  		}
+		n++;
+		free(line);
 	}
+
 	u32 j = 0;
 															//Declro un variable para iterar en filas
 	for(u32 i = g->m; i < (2*g->m); i++){				    //For para recorrer desde g->m hasta 2*(g->m)
@@ -120,7 +244,7 @@ int main(){
 
 	//----------------PRINTF DE PRUEBA----------------//
 
-	/*for(u32 i = 0; i < g->n; i++){
+/*	for(u32 i = 0; i < g->n; i++){
 		u32 contador = 0;
 		u32 cantidad = v[i]->ind_de_final_vecinos - v[i]->ind_de_inicio_vecinos + 1;
 		while(cantidad > contador){
@@ -152,7 +276,7 @@ int main(){
 		}
 		printf("\n");
 	}
-	*/
+*/
 	//---------------------FREES---------------------//
 
 	for(u32 i = 0; i < g->n; i++){							//Free para liberar mi array_vecinos y la posicion v[i]

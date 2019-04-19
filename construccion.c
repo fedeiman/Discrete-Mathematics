@@ -3,7 +3,6 @@
 
 #include "grafo.c"
 #include "vecinos.c"
-#include "stdio.h"
 
 //Funcion para ordenar los vertices
 //usada en qsort.
@@ -48,7 +47,7 @@ char* linea(char* line){
   line = (char*)calloc(1,sizeof(char));
 	if(!line){ 
 		printf("Error al reservar memoria linea 48");
-		return 0; 											
+		return NULL; 											
 	}
 	int i = 0; 
   int tam = 1;
@@ -69,14 +68,14 @@ char* linea(char* line){
 	return (char*)realloc(line, i * sizeof(char));						
 }
 
-int main (){
+Grafo ConstruccionDelGrafo(){
 	//Declaro variable de tipo Grafo.
 	//Luego me fijo que calloc haya podido reservar el espacio, en caso de no poder libero todo lo que este alocado
 	//hasta este momento, esto lo hago en todos los callocs.
 	Grafo g = (Grafo)calloc(1,sizeof(struct GrafoSt));
 	if(!g){
 		printf("Error al reservar memoria linea 76");
-		return 0;
+		return NULL;
 	} 				
 	char *line = NULL;
 	u32 con_linea = 0;
@@ -101,7 +100,7 @@ int main (){
 		printf("Formanto erroneo, falta p edge\n");							
 		if(g) free(g);																								
 		if(line) free(line);																							
-		return -1;
+		return NULL;
 	}
 	
 	con_linea++;
@@ -124,7 +123,7 @@ int main (){
 		printf("Formato erroneo,más de un espacio luego de p edge\n"); 
 		if(g) free(g);																							
 		if(line) free(line);
-		return -1;
+		return NULL;
 	}
 	
 	//Busco espacios entre n y m o un final de linea que agregue.
@@ -133,7 +132,7 @@ int main (){
       printf("Error en la linea %u al leer las aristas\n",con_linea);
 			if(g) free(g);
 			if(line) free(line);
-			return -1;
+			return NULL;
       } 
 		else{
 			i++;
@@ -150,7 +149,7 @@ int main (){
 	if (!g->vertices){ 
 		if(g) free(g);
 		printf("Error al reservar memoria linea 149");
-		return 0;
+		return NULL;
 	} 
 	//Para cada puntero
 	//le asigno un array de 2 de u32.
@@ -160,7 +159,7 @@ int main (){
 			if (g->vertices) free(g->vertices);
 			if(g) free(g);
 			printf("Error al reservar memoria linea 158");
-			return 0;
+			return NULL;
 		}					
 	}
 
@@ -183,7 +182,7 @@ int main (){
 			}
 			if(g->vertices) free(g->vertices);
 			if(g) free(g);
-			return -1;
+			return NULL;
 		}
 		
 		u32 j = 2;
@@ -203,7 +202,7 @@ int main (){
 			if(g->vertices) free(g->vertices);
 			if(g) free(g);
 			if(line) free(line);
-			return -1;
+			return NULL;
 		}
 		
 		while(line[j] == ' ' || line[j] == '\0') {
@@ -215,7 +214,7 @@ int main (){
 				if(g->vertices) free(g->vertices);
 				if(g) free(g);
 				if(line) free(line);					
-				return -1;
+				return NULL;
       } 
 			else{
 				j++;
@@ -258,33 +257,33 @@ int main (){
 		if(g->vertices) free(g->vertices);
 		if(g) free(g);
 		printf("Cantidad de vertices no es la declarada\n");
-		return -1;
+		return NULL;
 	}
 
 	//Declaro una variable de tipo array puntero a Vecino.
-	Vecino *v = (Vecino*)calloc((g->n),sizeof(Vecino));
-	if(!v){
+	g->v = (Vecino*)calloc((g->n),sizeof(struct Vecinos));
+	if(!g->v){
 		for(u32 i = 0; i < (2*g->m); i++){												
 			if (g->vertices[i]) free(g->vertices[i]);								
 		}		
 		if (g->vertices) free(g->vertices);
 		if(g) free(g);
 		printf("Error al reservar memoria linea 265");
-		return 0;
+		return NULL;
 	}				
 	
 	//Inicializo mi variable v.
 	for(u32 i = 0; i < g->n; i++){														
-		v[i] = (Vecino)calloc(1,sizeof(struct Vecinos));
-		if(!v[i]){
+		g->v[i] = (Vecino)calloc(1,sizeof(struct Vecinos));
+		if(!g->v[i]){
 			for(u32 i = 0; i < (2*g->m); i++){												
 				if (g->vertices[i]) free(g->vertices[i]);								
 			}		
 			if (g->vertices) free(g->vertices);
-			if(v) free(v);
+			if(g->v) free(g->v);
 			if(g) free(g);
 			printf("Error al reservar memoria linea 278");
-			return 0;
+			return NULL;
 		}	
 	}
 
@@ -301,18 +300,18 @@ int main (){
 		}		
 		if (g->vertices) free(g->vertices);
 		for(u32 i = 0; i < g->n; i++){																	
-			if(v[i]) free(v[i]); 
+			if(g->v[i]) free(g->v[i]); 
 		}
-		if(v) free(v);
+		if(g->v) free(g->v);
 		if(g) free(g);
 		printf("Error al reservar memoria linea 297");
-		return 0;
+		return NULL;
 	}
 	
 	for(u32 i = 0; i < 2*(g->m); i++){
 		if (i+1 < 2*(g->m) && g->vertices[i][0] != g->vertices[i+1][0]){ 
-			v[j]->nombre_del_vertice = g->vertices[i][0];
-			v[j+1]->nombre_del_vertice = g->vertices[i+1][0];
+			g->v[j]->nombre_del_vertice = g->vertices[i][0];
+			g->v[j+1]->nombre_del_vertice = g->vertices[i+1][0];
 			aux[j] = i;																					
 			aux[j+1] = i+1;																				
 			j++;                                            		
@@ -325,102 +324,69 @@ int main (){
 	//Seteo los indice de inicio y finales de los vecinos.
 	for(u32 i = 0; i < g->n; i++){												
 		if(i == 0){
-			v[i]->ind_de_inicio_vecinos = 0;
-			v[i]->ind_de_final_vecinos = aux[i];
+			g->v[i]->ind_de_inicio_vecinos = 0;
+			g->v[i]->ind_de_final_vecinos = aux[i];
 		}
 		else{
-			v[i]->ind_de_inicio_vecinos = aux[i-1] + 1;
-			v[i]->ind_de_final_vecinos = aux[i];
+			g->v[i]->ind_de_inicio_vecinos = aux[i-1] + 1;
+			g->v[i]->ind_de_final_vecinos = aux[i];
 		}
 	}
 	//Libero el Puntero al arreglo aux.
 	if(aux) free(aux);
 
+
 	//Inicializo el arreglo con el orden.
-	g->orden = (u32*)calloc(((g->n)),sizeof(u32));
+	g->orden = (u32*)calloc((g->n),sizeof(u32));
 	if(!g->orden){
 		for(u32 i = 0; i < (2*g->m); i++){												
 			if (g->vertices[i]) free(g->vertices[i]);								
 		}		
 		if (g->vertices) free(g->vertices);
 		for(u32 i = 0; i < g->n; i++){																
-			if(v[i]) free(v[i]); 
+			if(g->v[i]) free(g->v[i]); 
 		}
-		if(v) free(v);
+		if(g->v) free(g->v);
 		if(g) free(g);
 		printf("Error al reservar memoria linea 340");
-		return 0;
+		return NULL;
 	}						
 	
 	for(u32 i = 0; i < g->n; i++){
-		g->orden[i] = v[i]->nombre_del_vertice;									
+		g->orden[i] = g->v[i]->nombre_del_vertice;									
 	}
 
 	//Inicializo el array dinamico de indice de vecinos.
 	for(u32 i = 0; i < g->n; i++){														
 		//cantidad de vecinos del vertice i.
-		u32 c = v[i]->ind_de_final_vecinos - v[i]->ind_de_inicio_vecinos + 1;	
-		v[i]->array_vecinos = (u32*)calloc(c,sizeof(u32));
-		if(!v[i]->array_vecinos){
+		u32 c = g->v[i]->ind_de_final_vecinos - g->v[i]->ind_de_inicio_vecinos + 1;	
+		g->v[i]->array_vecinos = (u32*)calloc(c,sizeof(u32));
+		if(!g->v[i]->array_vecinos){
 			for(u32 i = 0; i < (2*g->m); i++){												
 			if (g->vertices[i]) free(g->vertices[i]);								
 		}		
 		if (g->vertices) free(g->vertices);
 		for(u32 i = 0; i < g->n; i++){														
-			if(v[i]->array_vecinos) free(v[i]->array_vecinos);			
-			if(v[i]) free(v[i]); 
+			if(g->v[i]->array_vecinos) free(g->v[i]->array_vecinos);			
+			if(g->v[i]) free(g->v[i]); 
 		}
-		if(v) free(v);
+		if(g->v) free(g->v);
 		if(g) free(g);
 		printf("Error al reservar memoria linea 363");
-		return 0;
+		return NULL;
 		}
 	}
 	
 	//For para llenar con busqueda_binaria mi arreglo v[n]->array_vecinos[n].
 	for(u32  i = 0; i < g->n; i++){														
 		u32 contador = 0;																				
-		u32 cantidad = v[i]->ind_de_final_vecinos - v[i]->ind_de_inicio_vecinos + 1;
+		u32 cantidad = g->v[i]->ind_de_final_vecinos - g->v[i]->ind_de_inicio_vecinos + 1;
 		while(cantidad > contador){
-			v[i]->array_vecinos[contador] = busqueda_binaria(v,g->vertices[v[i]->ind_de_inicio_vecinos + contador][1],g->n);
+			g->v[i]->array_vecinos[contador] = busqueda_binaria(g->v,g->vertices[g->v[i]->ind_de_inicio_vecinos + contador][1],g->n);
 			contador ++;
 		}
 	}												 
-	//----------------PRINTF DE PRUEBA----------------//
 
-	/*for(u32 i = 0; i < g->n; i++){
-		u32 contador = 0;
-		u32 cantidad = v[i]->ind_de_final_vecinos - v[i]->ind_de_inicio_vecinos + 1;
-		while(cantidad > contador){
-		printf("El valor de indice de los vecinos de %u es %u\n",v[i]->nombre_del_vertice,v[i]->array_vecinos[contador]);
-		contador++;
-		}
-	}
-	for(u32 i = 0; i < g->n; i++){
-		printf("El valor de incio de los vecinos de %u es %u\n" ,v[i]->nombre_del_vertice,v[i]->ind_de_inicio_vecinos);
-		printf("El valor de final de los vecinos de %u es %u\n" ,v[i]->nombre_del_vertice,v[i]->ind_de_final_vecinos);
-	}
-
-	for(u32 i = 0; i < g->n; i++){
-	printf("%u ",aux[i]);
-	}
-
-	printf("\n");
-
-	for(u32 i = 0; i < g->n; i++){
-		printf("%u ",v[i]->nombre_del_vertice);
-	}
-
-	printf("\n");
-	printf("\n");
-	
-	for(u32 i = 0; i < 2*g->m; i++){
-		for(int j = 0; j < 2; j++){
-			printf("%u ", g->vertices[i][j]);
-		}
-		printf("\n");
-	}
-*/
 	//Recorro el arreglo de punteros principales y los libero.
 	for(u32 i = 0; i < (2*g->m); i++){												
 		if (g->vertices[i]) free(g->vertices[i]);								
@@ -428,20 +394,88 @@ int main (){
 
 	//Libero el puntero al arreglo de punteros.
 	if (g->vertices) free(g->vertices);
-
-
-	//---------------------FREES---------------------//
-
-	for(u32 i = 0; i < g->n; i++){														//Free para liberar mi array_vecinos y la posicion v[i]
-		if(v[i]->array_vecinos) free(v[i]->array_vecinos);			//del arreglo de struct Vecinos.
-		if(v[i]) free(v[i]); 
-	}
-	
-	if(g->orden) free(g->orden);															//Libero el arrelog con el orden.
-	
-	if(g) free(g);																						//Libero la estructura de GrafoSt.
-	
-	if(v) free(v);																						//Libero el Puntero al arreglo de Vecinos.
+	return g;
 }
 
+Grafo CopiarGrafo(Grafo G){
+	Grafo copia = (Grafo)calloc(1,sizeof(struct GrafoSt));
+	if(!copia){
+		printf("Error al reservar memoria linea 401");
+		return NULL;
+	}
+	copia->n = G->n;
+	copia->m = G->m;
+	//Declaro una variable de tipo array puntero a Vecino.
+	copia->v = (Vecino*)calloc((copia->n),sizeof(struct Vecinos));
+	if(!copia->v){		
+		if(copia) free(copia);
+		printf("Error al reservar memoria linea 405");
+		return NULL;
+	}
+	//Inicializo mi variable v.
+	for(u32 i = 0; i < copia->n; i++){														
+		copia->v[i] = (Vecino)calloc(1,sizeof(struct Vecinos));
+		if(!copia->v[i]){
+			if(copia->v) free(copia->v);
+			if(copia) free(copia);
+			printf("Error al reservar memoria linea 413");
+			return NULL;
+		}	
+	}
+	for(u32 i = 0; i < copia->n; i++){
+		copia->v[i]->nombre_del_vertice = G->v[i]->nombre_del_vertice;
+		copia->v[i]->ind_de_inicio_vecinos = G->v[i]->ind_de_inicio_vecinos;
+		copia->v[i]->ind_de_final_vecinos = G->v[i]->ind_de_final_vecinos;
+	}
+	//Inicializo el array dinamico de indice de vecinos.
+	for(u32 i = 0; i < copia->n; i++){														
+		//cantidad de vecinos del vertice i.
+		u32 c = copia->v[i]->ind_de_final_vecinos - copia->v[i]->ind_de_inicio_vecinos + 1;	
+		copia->v[i]->array_vecinos = (u32*)calloc(c,sizeof(u32));
+		if(!copia->v[i]->array_vecinos){
+			for(u32 i = 0; i < (2*copia->m); i++){												
+			if (copia->vertices[i]) free(copia->vertices[i]);								
+		}		
+		if (copia->vertices) free(copia->vertices);
+		for(u32 i = 0; i < copia->n; i++){														
+			if(copia->v[i]->array_vecinos) free(copia->v[i]->array_vecinos);			
+			if(copia->v[i]) free(copia->v[i]); 
+		}
+		if(copia->v) free(copia->v);
+		if(copia) free(copia);
+		printf("Error al reservar memoria linea 430");
+		return NULL;
+		}
+	}
+	//For para llenar con busqueda_binaria mi arreglo v[n]->array_vecinos[n].
+	for(u32  i = 0; i < copia->n; i++){														
+		u32 contador = 0;																				
+		u32 cantidad = copia->v[i]->ind_de_final_vecinos - copia->v[i]->ind_de_inicio_vecinos + 1;
+		while(cantidad > contador){
+			copia->v[i]->array_vecinos[contador] = G->v[i]->array_vecinos[contador];
+			contador ++;
+		}
+	}
+		return copia;
+}
+
+void DestruccionDelGrafo(Grafo G){
+	
+	//Free para liberar mi array_vecinos y la posicion v[i]
+	//del arreglo de struct Vecinos.
+	for(u32 i = 0; i < G->n; i++){														
+		if(G->v[i]->array_vecinos) free(G->v[i]->array_vecinos);			
+		if(G->v[i]) free(G->v[i]); 
+	}
+	
+	//Libero el arreglo con el orden.
+	if(G->orden) free(G->orden);															
+	
+	//Libero el Puntero al arreglo de Vecinos.
+	if(G->v) free(G->v);																						
+	
+	//Libero la estructura de GrafoSt.
+	if(G) free(G);																						
+	
+}
 #endif

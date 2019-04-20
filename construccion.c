@@ -6,39 +6,42 @@
 
 //Funcion para ordenar los vertices
 //usada en qsort.
-int cmp(const void* a, const void* b) {
-  u32 *ap = *(u32**)a, *bp = *(u32**)b;
-  u32 fsta = *ap, fstb = *bp;
-  u32 snda = *(++ap), sndb = *(++bp);
-  if(fsta == fstb) return snda - sndb;
-    else return fsta - fstb;
+int cmp(const void* pa, const void* pb) {
+  const u32 *a = *(const u32 **)pa;
+  const u32 *b = *(const u32 **)pb;
+  if(a[0] == b[0]) {
+    if(a[1] <= b[1]) return -1;
+    else return 1;
+  }
+  else {
+    if(a[0] <= b[0]) return -1;
+    return 1;
+  }
 }
 
 //Funcion de busqueda binaria en el arreglo de
 //struct Vecinos.
 u32 busqueda_binaria(Vecino *v, u32 dato, u32 array_lenght){
-	u32 inf = 0; 
-	u32 sup = array_lenght;
-	u32 mitad;
-	while(inf<=sup){
-		mitad = (inf + sup)/2;
-		if(v[mitad]->nombre_del_vertice == dato){
-			return mitad;
-		}
-		if(v[mitad]->nombre_del_vertice > dato){
-			sup = mitad;
-			mitad = (inf + sup)/2;
-		}
-		if(v[mitad]->nombre_del_vertice < dato){
-			inf = mitad;
-			mitad = (inf + sup)/2;
-		}
-	}
-	//Esta linea se ejecutara solo en caso de que el "dato"
-	//a buscar no este en v[n]->nombre_del_vetice.
-	//Cosa que no puede pasar.
-	printf("ERROR");
-	return(-1);
+  u32 inf = 0; 
+  u32 sup = array_lenght - 1;
+  u32 mitad;
+  while(inf<=sup){
+    mitad = (inf + sup)/2;
+    if(v[mitad]->nombre_del_vertice == dato){
+      return mitad;
+    }
+    if(v[mitad]->nombre_del_vertice > dato){
+      sup = mitad - 1;
+    }
+    if(v[mitad]->nombre_del_vertice < dato){
+      inf = mitad + 1;
+    }
+  }
+  //Esta linea se ejecutara solo en caso de que el "dato"
+  //a buscar no este en v[n]->nombre_del_vetice.
+  //Cosa que no puede pasar.
+  printf("ERROR");
+  return(-1);
 }
 //Funcion para obtener la primera una linea mediante stdin.
 char* linea(char* line){
@@ -231,8 +234,7 @@ Grafo ConstruccionDelGrafo(){
 	if(line) free(line);
 	//Declro un variable para iterar en filas
 	u32 j = 0;																								
-	
-
+		
 	//For para recorrer desde g->m hasta 2*(g->m)
 	//y completar con sus lugares pero invertidos.
 	for(u32 i = g->m; i < (2*g->m); i++){				    					
@@ -241,15 +243,14 @@ Grafo ConstruccionDelGrafo(){
 		j++;
 	}
 	//Ordeno los vertices de menor a mayor.
-	qsort(vertices, 2*(g->m), 8, cmp);											
-	
+	qsort(vertices, 2 * (g->m), sizeof(vertices[0]), cmp);
 	//Me fijo si la cantidad de veritces declarada es la correcta.
-	u32 rep = 0;																							
-	for(u32 i = 0; i < 2*(g->m); i++){
-		if(i+1 < 2*g->m && vertices[i][0] == vertices[i+1][0]){
-			rep++;
-		}
-	}
+	u32 rep = 0;                                              
+  	for(u32 i = 0; i < 2*(g->m) - 1; i++){
+    	if(vertices[i][0] == vertices[i+1][0]){
+      	rep++;
+    }
+  }
 	if(g->n != (2*g->m) - rep){
 		for(u32 i = 0; i < (2*g->m); i++){					
 			if(vertices[i]) free(vertices[i]);								

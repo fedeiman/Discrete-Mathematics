@@ -15,6 +15,7 @@ Mail
 typedef unsigned int u32;
 typedef struct GrafoSt *Grafo; 
 typedef struct Vecinos *Vecino;
+typedef struct Ordenes *Orden;
 
 //Funciones de Construccion/Destruccion/Copia del grafo
 

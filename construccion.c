@@ -3,6 +3,7 @@
 
 #include "grafo.c"
 #include "vecinos.c"
+#include "orden.c"
 
 //Funcion para ordenar los vertices
 //usada en qsort.
@@ -338,23 +339,44 @@ Grafo ConstruccionDelGrafo(){
 
 
 	//Inicializo el arreglo con el orden.
-	g->orden = (u32*)calloc((g->n),sizeof(u32));
-	if(!g->orden){
-		for(u32 i = 0; i < (2*g->m); i++){												
-			if (vertices[i]) free(vertices[i]);								
+	//Declaro una variable de tipo array puntero a Orden.
+	g->o = (Orden*)calloc((g->n),sizeof(struct Ordenes));
+		if(!g->o){
+			for(u32 i = 0; i < (2*g->m); i++){												
+				if (vertices[i]) free(vertices[i]);								
 		}		
 		if (vertices) free(vertices);
-		for(u32 i = 0; i < g->n; i++){																
+		for(u32 i = 0; i < g->n; i++){														
+			if(g->v[i]->array_vecinos) free(g->v[i]->array_vecinos);			
 			if(g->v[i]) free(g->v[i]); 
 		}
 		if(g->v) free(g->v);
 		if(g) free(g);
-		printf("Error al reservar memoria linea 340");
+		printf("Error al reservar memoria linea 354");
 		return NULL;
-	}						
-	
+		}
+
+		for(u32 i = 0; i < g->n; i++){														
+		g->o[i] = (Orden)calloc(1,sizeof(struct Ordenes));
+		if(!g->o[i]){
+			for(u32 i = 0; i < (2*g->m); i++){												
+			if (vertices[i]) free(vertices[i]);								
+		}		
+		if (vertices) free(vertices);
+		for(u32 i = 0; i < g->n; i++){														
+			if(g->v[i]->array_vecinos) free(g->v[i]->array_vecinos);			
+			if(g->v[i]) free(g->v[i]); 
+		}
+		if(g->v) free(g->v);
+		if(g->o) free(g->o);
+		if(g) free(g);
+		printf("Error al reservar memoria linea 354");
+		return NULL;
+		}	
+	}
+
 	for(u32 i = 0; i < g->n; i++){
-		g->orden[i] = g->v[i]->nombre_del_vertice;									
+		g->o[i]->nombre = g->v[i]->nombre_del_vertice;									
 	}
 
 	//Inicializo el array dinamico de indice de vecinos.
@@ -369,8 +391,10 @@ Grafo ConstruccionDelGrafo(){
 		if (vertices) free(vertices);
 		for(u32 i = 0; i < g->n; i++){														
 			if(g->v[i]->array_vecinos) free(g->v[i]->array_vecinos);			
-			if(g->v[i]) free(g->v[i]); 
+			if(g->v[i]) free(g->v[i]);
+			if(g->o[i]) free(g->o[i]); 
 		}
+		if(g->o) free(g->o);
 		if(g->v) free(g->v);
 		if(g) free(g);
 		printf("Error al reservar memoria linea 363");
@@ -444,7 +468,7 @@ Grafo CopiarGrafo(Grafo G){
 		return NULL;
 		}
 	}
-	//For para llenar con busqueda_binaria mi arreglo v[n]->array_vecinos[n].
+	//For para llenar cmi arreglo v[n]->array_vecinos[n].
 	for(u32  i = 0; i < copia->n; i++){														
 		u32 contador = 0;																				
 		u32 cantidad = copia->v[i]->ind_de_final_vecinos - copia->v[i]->ind_de_inicio_vecinos + 1;
@@ -453,6 +477,39 @@ Grafo CopiarGrafo(Grafo G){
 			contador ++;
 		}
 	}
+	//Inicializo el arreglo con el orden.
+	//Declaro una variable de tipo array puntero a Orden.
+	copia->o = (Orden*)calloc((copia->n),sizeof(struct Ordenes));
+		if(!copia->o){
+		for(u32 i = 0; i < copia->n; i++){														
+			if(copia->v[i]->array_vecinos) free(copia->v[i]->array_vecinos);			
+			if(copia->v[i]) free(copia->v[i]); 
+		}
+		if(copia->v) free(copia->v);
+		if(copia) free(copia);
+		printf("Error al reservar memoria linea 354");
+		return NULL;
+		}
+
+		for(u32 i = 0; i < copia->n; i++){														
+		copia->o[i] = (Orden)calloc(1,sizeof(struct Ordenes));
+		if(!copia->o[i]){		
+		for(u32 i = 0; i < copia->n; i++){														
+			if(copia->v[i]->array_vecinos) free(copia->v[i]->array_vecinos);			
+			if(copia->v[i]) free(copia->v[i]); 
+		}
+		if(copia->v) free(copia->v);
+		if(copia->o) free(copia->o);
+		if(copia) free(copia);
+		printf("Error al reservar memoria linea 354");
+		return NULL;
+		}	
+	}
+
+	for(u32 i = 0; i < copia->n; i++){
+		copia->o[i]->nombre = G->v[i]->nombre_del_vertice;									
+	}
+
 		return copia;
 }
 
@@ -465,9 +522,14 @@ void DestruccionDelGrafo(Grafo G){
 		if(G->v[i]) free(G->v[i]); 
 	}
 	
-	//Libero el arreglo con el orden.
-	if(G->orden) free(G->orden);															
+	//Libero el arreglo con la estructura Ordenes.
+	for(u32 i = 0; i < G->n; i++){														
+		if(G->o[i]) free(G->o[i]);			 
+	}
 	
+	//Libero el puntero al arreglo.
+	if (G->o) free(G->o);
+
 	//Libero el Puntero al arreglo de Vecinos.
 	if(G->v) free(G->v);																						
 	

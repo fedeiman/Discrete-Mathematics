@@ -7,7 +7,7 @@
 
 //Funcion para ordenar los vertices
 //usada en qsort.
-int cmp(const void* pa, const void* pb) {
+int cmp(const void *pa, const void *pb) {
   const u32 *a = *(const u32 **)pa;
   const u32 *b = *(const u32 **)pb;
   if(a[0] == b[0]) {
@@ -334,6 +334,9 @@ Grafo ConstruccionDelGrafo(){
 			g->v[i]->ind_de_final_vecinos = aux[i];
 		}
 	}
+	for(u32 i = 0; i < g->n; i++){
+		g->v[i]->total_vecinos = g->v[i]->ind_de_final_vecinos - g->v[i]->ind_de_inicio_vecinos + 1;
+	}
 	//Libero el Puntero al arreglo aux.
 	if(aux) free(aux);
 
@@ -419,6 +422,12 @@ Grafo ConstruccionDelGrafo(){
 
 	//Libero el puntero al arreglo de punteros.
 	if (vertices) free(vertices);
+	
+	//Llamada de greedy
+
+
+	//hacer rmb
+	;
 	return g;
 }
 
@@ -509,7 +518,9 @@ Grafo CopiarGrafo(Grafo G){
 	for(u32 i = 0; i < copia->n; i++){
 		copia->o[i]->nombre = G->v[i]->nombre_del_vertice;									
 	}
-
+	for(u32 i = 0; i < copia->n; i++){
+		copia->v[i]->total_vecinos = G->v[i]->total_vecinos;									
+	}
 		return copia;
 }
 
@@ -520,8 +531,8 @@ void DestruccionDelGrafo(Grafo G){
 	for(u32 i = 0; i < G->n; i++){														
 		if(G->v[i]->array_vecinos) free(G->v[i]->array_vecinos);			
 		if(G->v[i]) free(G->v[i]); 
-	}
-	
+	}			 	
+
 	//Libero el arreglo con la estructura Ordenes.
 	for(u32 i = 0; i < G->n; i++){														
 		if(G->o[i]) free(G->o[i]);			 

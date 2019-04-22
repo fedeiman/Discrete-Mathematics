@@ -29,7 +29,7 @@ Grafo CopiarGrafo(Grafo G);
 
 u32 Greedy(Grafo G);
 
-int Bipartito(Grafo G); //mal
+int Bipartito(Grafo G); 
 
 //Funciones para extraer información de datos del grafo// info.c
 
@@ -53,7 +53,7 @@ u32 NombreJotaesimoVecino(Grafo G, u32 i,u32 j);
 
 //Funciones de ordenacion // ordenamiento.c
 
-char OrdenNatural(Grafo G);//mal
+char OrdenNatural(Grafo G);
 
 char OrdenWelshPowell(Grafo G);
 
@@ -63,7 +63,7 @@ char RMBCnormal(Grafo G);
 
 char RMBCrevierte(Grafo G);
 
-char RMBCchicogrande(Grafo G); //mal
+char RMBCchicogrande(Grafo G);
 
 char SwitchColores(Grafo G,u32 i,u32 j);
 

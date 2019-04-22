@@ -41,18 +41,18 @@ u32 Greedy(Grafo G){
     return 0;
   }
   u32 *usados = (u32*)calloc((G->n),sizeof(u32));
-  if(!sinusar){
+  if(!usados){
     printf("ERROR PARA RESERVAR MEMORIA PARA ARREGLO USADOS EN FUN GREEDY");
     return 0;
   }
   u32 c = 0;
   u32 color = 0;
   u32 resultado = 0;
-  
+  //seteo todos los colores de los vertices en 2^32-1
   for(u32 i = 0; i < G->n ; i++){
     G->o[i]->color_actual = ~0u;
   }
-  for(u32 i = 0; i < G->n; i++){
+  for(u32 i = 0; i < G->n; i++) {
     for(u32 j = 0; j < (G->v[i]->ind_de_final_vecinos - G->v[i]->ind_de_inicio_vecinos + 1); j++){
       if(G->o[G->v[i]->array_vecinos[j]]->color_actual != ~0u){
         sinusar[G->o[G->v[i]->array_vecinos[j]]->color_actual] = 1;
@@ -69,7 +69,6 @@ u32 Greedy(Grafo G){
     while(c){ 
       sinusar[usados[--c]] = 0;
     }
-    //memset(sinusar,0,G->n*sizeof(u32));
   }
   G->colores = resultado;
   if(sinusar) free(sinusar);
@@ -78,4 +77,37 @@ u32 Greedy(Grafo G){
   return resultado;
 }
 
+int Bipartito(Grafo G) {
+  u32 c = 0;
+  u32 *usados = (u32*)calloc((G->n),sizeof(u32));
+  if(!usados){
+    printf("ERROR PARA RESERVAR MEMORIA PARA ARREGLO USADOS EN FUN BIPARTITO");
+    return 0;
+  }
+  G->colores = 1;
+  for(u32 i = 0; i < G->n ; i++){
+    G->o[i]->color_actual = ~0u;
+  }
+  for(u32 i = 0; i < G->n; i++) if (G->o[i]->color_actual == ~0u){
+      usados[c++] = i;
+      G->o[i]->color_actual = 0;
+      while(c != 0){
+        u32 x = usados[--c];
+        for(u32 j = 0; j < G->o[x]->cant_vecinos; j++){
+          if(G->o[G->o[x]->array_vecinos[j]]->color_actual == ~0u) {
+            G->o[G->o[x]->array_vecinos[j]]->color_actual = (G->o[x]->color_actual + 1) % 2;
+            usados[c++] = G->o[x]->array_vecinos[j];
+            G->colores = 2;
+          }
+          else if (G->o[G->o[x]->array_vecinos[j]]->color_actual == G->o[x]->color_actual){
+            Greedy(G);
+            if(usados) free(usados);          
+            return 0;
+          }
+        }
+      }
+  }
+  if(usados) free(usados);
+  return 1;
+}
 #endif

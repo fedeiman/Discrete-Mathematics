@@ -10,6 +10,16 @@
 int grado(Vecino v){
   return (v->total_vecinos);
 }
+int nom(Vecino v){
+  return (v->nombre_del_vertice);
+}
+
+int color(Vecino v){
+  return(v->color);
+}
+int cant_col(Vecino v){
+  return(v->cant_color);
+}
 
   int powell(const void *pa, const void *pb){
   u32 n1,n2;
@@ -21,11 +31,16 @@ int grado(Vecino v){
   else if(n1 < n2) return(1);
   else return(0);
 }
-int color(Vecino v){
-  return(v->color);
-}
-int cant_col(Vecino v){
-  return(v->cant_color);
+
+  int orden_n(const void *pa, const void *pb){
+  u32 n1,n2;
+  Vecino *a = (Vecino *)pa;
+  Vecino *b = (Vecino *)pb;
+  n1 = nom(*a);  
+  n2 = nom(*b);
+  if(n1 < n2) return(-1);
+  else if(n1 > n2) return(1);
+  else return(0);
 }
 
 int RMBCn(const void *pa, const void *pb){
@@ -45,8 +60,8 @@ int RMBCr(const void *pa, const void *pb){
   Vecino *b = (Vecino *)pb;
   n1 = color(*a);  
   n2 = color(*b);
-  if(n1 < n2) return(-1);
-  else if(n1 > n2) return(1);
+  if(n1 > n2) return(-1);
+  else if(n1 < n2) return(1);
   else return(0);
 }
 
@@ -56,15 +71,18 @@ int RMBCc(const void *pa, const void *pb){
   Vecino *b = (Vecino *)pb;
   n1 = cant_col(*a);  
   n2 = cant_col(*b);
-  if(n1 > n2) return(-1);
-  else if(n1 < n2) return(1);
-  else return(0);
+  if(n1 == n2) {
+    if(color(*a) <= color(*b)) return -1;
+    else return 1;
+  }
+  else {
+    if(n1 < n2) return -1;
+    return 1;
+  }
 }
 
 char OrdenNatural(Grafo G){
-  for(u32 i = 0; i < G->n; i++){
-    G->v[i]->nombre_del_vertice = G->v[i]->nombre_del_vertice; 
-  }
+  qsort(G->v,G->n,sizeof(G->v[0]),orden_n);
   return 0;
 }
 
@@ -102,8 +120,9 @@ char RMBCchicogrande(Grafo G){
     return 1;
   } 
 	for(u32 i = 0; i < G->n; i++){
-		cancol[G->v[i]->color] = cancol[G->v[i]->color] + 1; 
+		cancol[G->v[i]->color]++; 
 	}
+
   for(u32 i = 0; i < G->n; i++){
     G->v[i]->cant_color = cancol[G->v[i]->color];
   }

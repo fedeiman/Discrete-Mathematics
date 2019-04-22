@@ -423,11 +423,8 @@ Grafo ConstruccionDelGrafo(){
 	//Libero el puntero al arreglo de punteros.
 	if (vertices) free(vertices);
 	
-	//Llamada de greedy
-
-
-	//hacer rmb
-	;
+	Greedy(g);	
+	
 	return g;
 }
 
@@ -439,6 +436,7 @@ Grafo CopiarGrafo(Grafo G){
 	}
 	copia->n = G->n;
 	copia->m = G->m;
+	copia->colores = G->colores;
 	//Declaro una variable de tipo array puntero a Vecino.
 	copia->v = (Vecino*)calloc((copia->n),sizeof(struct Vecinos));
 	if(!copia->v){		
@@ -460,6 +458,9 @@ Grafo CopiarGrafo(Grafo G){
 		copia->v[i]->nombre_del_vertice = G->v[i]->nombre_del_vertice;
 		copia->v[i]->ind_de_inicio_vecinos = G->v[i]->ind_de_inicio_vecinos;
 		copia->v[i]->ind_de_final_vecinos = G->v[i]->ind_de_final_vecinos;
+		copia->v[i]->total_vecinos = G->v[i]->total_vecinos;
+		copia->v[i]->color = G->v[i]->color;
+		copia->v[i]->cant_color = G->v[i]->cant_color;
 	}
 	//Inicializo el array dinamico de indice de vecinos.
 	for(u32 i = 0; i < copia->n; i++){														
@@ -516,10 +517,8 @@ Grafo CopiarGrafo(Grafo G){
 	}
 
 	for(u32 i = 0; i < copia->n; i++){
-		copia->o[i]->nombre = G->v[i]->nombre_del_vertice;									
-	}
-	for(u32 i = 0; i < copia->n; i++){
-		copia->v[i]->total_vecinos = G->v[i]->total_vecinos;									
+		copia->o[i]->nombre = G->o[i]->nombre;
+		copia->o[i]->color_actual = G->o[i]->color_actual;							
 	}
 		return copia;
 }

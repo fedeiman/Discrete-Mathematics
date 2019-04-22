@@ -5,6 +5,6 @@
 
 struct Ordenes {
 	u32 nombre;//Nombre real del vertice actual
-	u32 color_actaul; //Color del vertice 
+	u32 color_actual; //Color del vertice 
 };
 #endif

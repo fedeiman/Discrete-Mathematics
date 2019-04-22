@@ -12,8 +12,9 @@ u32 NumeroDeVertices(Grafo G){
 u32 NumeroDeLados(Grafo G){
   return(G->m);
 }
+
 u32 NumeroDeColores(Grafo G){
-  return(G->colores + 1);
+  return(G->colores);
 }
 
 u32 NombreDelVertice(Grafo G, u32 i){
@@ -44,8 +45,9 @@ u32 ColorJotaesimoVecino(Grafo G, u32 i,u32 j){
     printf("i es mayor a la cantidad de vertices o j es mayor a la cantiad de vecinos");
   }  
   else 
-    return(G->o[G->v[i]->array_vecinos[j]]->color_actaul);
+    return(G->o[G->v[i]->array_vecinos[j]]->color_actual);
 }
+
 u32 NombreJotaesimoVecino(Grafo G, u32 i,u32 j){
     if(i >= G->n || j >= G->v[i]->ind_de_final_vecinos - G->v[i]->ind_de_inicio_vecinos + 1 ){
     printf("i es mayor a la cantidad de vertices o j es mayor a la cantiad de vecinos");  
@@ -54,15 +56,6 @@ u32 NombreJotaesimoVecino(Grafo G, u32 i,u32 j){
   else 
     return(G->o[G->v[i]->array_vecinos[j]]->nombre);
 }
-
-
-
-
-
-
-
-
-
 
 #endif
 

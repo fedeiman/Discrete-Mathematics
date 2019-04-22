@@ -45,18 +45,19 @@ int RMBCr(const void *pa, const void *pb){
   Vecino *b = (Vecino *)pb;
   n1 = color(*a);  
   n2 = color(*b);
-  if(n1 > n2) return(-1);
-  else if(n1 < n2) return(1);
+  if(n1 < n2) return(-1);
+  else if(n1 > n2) return(1);
   else return(0);
 }
+
 int RMBCc(const void *pa, const void *pb){
   u32 n1,n2;
   Vecino *a = (Vecino *)pa;
   Vecino *b = (Vecino *)pb;
   n1 = cant_col(*a);  
   n2 = cant_col(*b);
-  if(n1 < n2) return(-1);
-  else if(n1 > n2) return(1);
+  if(n1 > n2) return(-1);
+  else if(n1 < n2) return(1);
   else return(0);
 }
 
@@ -95,7 +96,19 @@ char RMBCrevierte(Grafo G){
 }
 
 char RMBCchicogrande(Grafo G){
+	u32 *cancol = (u32*)calloc(G->n,sizeof(u32));
+  if(!cancol){
+    printf("ERROR AL RESERVAR MEMORIA PARA RMBCchicogrande");
+    return 1;
+  } 
+	for(u32 i = 0; i < G->n; i++){
+		cancol[G->v[i]->color] = cancol[G->v[i]->color] + 1; 
+	}
+  for(u32 i = 0; i < G->n; i++){
+    G->v[i]->cant_color = cancol[G->v[i]->color];
+  }
   qsort(G->v,G->n,sizeof(G->v[0]),RMBCc);
+  if(cancol) free(cancol);
   return 0;
 }
 

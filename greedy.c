@@ -36,19 +36,27 @@ u32 max(u32 i, u32 j){
 
 u32 Greedy(Grafo G){
   u32 *sinusar = (u32*)calloc((G->n),sizeof(u32));
+  if(!sinusar){
+    printf("ERROR PARA RESERVAR MEMORIA PARA ARREGLO SINUSAR EN FUN GREEDY");
+    return 0;
+  }
   u32 *usados = (u32*)calloc((G->n),sizeof(u32));
+  if(!sinusar){
+    printf("ERROR PARA RESERVAR MEMORIA PARA ARREGLO USADOS EN FUN GREEDY");
+    return 0;
+  }
   u32 c = 0;
   u32 color = 0;
   u32 resultado = 0;
   
   for(u32 i = 0; i < G->n ; i++){
-    G->o[i]->color_actaul = ~0u;
+    G->o[i]->color_actual = ~0u;
   }
   for(u32 i = 0; i < G->n; i++){
     for(u32 j = 0; j < (G->v[i]->ind_de_final_vecinos - G->v[i]->ind_de_inicio_vecinos + 1); j++){
-      if(G->o[G->v[i]->array_vecinos[j]]->color_actaul != ~0u){
-        sinusar[G->o[G->v[i]->array_vecinos[j]]->color_actaul] = 1;
-        usados[c++] = G->o[G->v[i]->array_vecinos[j]]->color_actaul;
+      if(G->o[G->v[i]->array_vecinos[j]]->color_actual != ~0u){
+        sinusar[G->o[G->v[i]->array_vecinos[j]]->color_actual] = 1;
+        usados[c++] = G->o[G->v[i]->array_vecinos[j]]->color_actual;
       }
     }  
     while(sinusar[color] == 1){
@@ -56,14 +64,14 @@ u32 Greedy(Grafo G){
     }
     resultado = max(resultado,color + 1);
     G->v[i]->color = color;
-    G->o[binaria(G->o,G->v[i]->nombre_del_vertice,G->n)]->color_actaul = color;
+    G->o[binaria(G->o,G->v[i]->nombre_del_vertice,G->n)]->color_actual = color;
     color = 0;
     while(c){ 
       sinusar[usados[--c]] = 0;
     }
     //memset(sinusar,0,G->n*sizeof(u32));
   }
-
+  G->colores = resultado;
   if(sinusar) free(sinusar);
   if(usados) free(usados);
   
